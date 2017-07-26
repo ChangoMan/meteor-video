@@ -1,11 +1,10 @@
-import {Meteor} from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Tracker} from 'meteor/tracker';
+// import { Tracker } from 'meteor/tracker';
 
-import App from './../imports/ui/App';
-import VideoAPI from './../imports/api/videos';
+import { routes } from '../imports/routes/routes';
 
 Meteor.startup(() => {
-    ReactDOM.render(<App />, document.getElementById('app'));
+    ReactDOM.render(routes, document.getElementById('app'));
 });

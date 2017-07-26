@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import YouTube from 'react-youtube';
+import { Link } from 'react-router-dom';
+
 import VideoAPI from './../api/videos';
 
 class App extends Component {
@@ -76,7 +78,8 @@ class App extends Component {
             this.setState(function() {
                 return {
                     videos: this.state.customVideos,
-                    selectedVideo: this.state.customVideos[Math.floor(Math.random()*this.state.videos.length)]
+                    selectedVideo: this.state.customVideos[Math.floor(Math.random()*this.state.videos.length)],
+                    controlsOpen: !this.state.controlsOpen
                 }
             });
         } else {
@@ -84,7 +87,8 @@ class App extends Component {
             .then((videos) => {
                 this.setState(function() {
                     return {
-                        videos: videos
+                        videos: videos,
+                        controlsOpen: !this.state.controlsOpen
                     }
                 });
                 this.randomVideo();
@@ -128,6 +132,7 @@ class App extends Component {
                     <p><button className="btn btn--block" onClick={this.switchPlaylist.bind(null, 'kpop')}>Kpop</button></p>
                     <p><button className="btn btn--block" onClick={this.switchPlaylist.bind(null, 'tswift')}>Tswift</button></p>
                     <p className="u-bottom0"><button className="btn btn--block" onClick={this.switchPlaylist.bind(null, 'custom')}>Custom Playlist</button></p>
+                    <p><Link to="/battle">To Battle!</Link></p>
                 </div>
                 <div className="controls-btn">
                     <button className="btn" onClick={this.toggleControls}>Playlists</button>
