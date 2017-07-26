@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import YouTube from 'react-youtube';
 import VideoAPI from './../api/videos';
 
-console.log(VideoAPI)
-
 class App extends Component {
 
     constructor(props) {
@@ -52,7 +50,6 @@ class App extends Component {
 
     componentDidMount() {
 
-        // VideoAPI.getVideos('PLgAWynvKDEDVaILn5viLCElGP0u0svWiS')
         VideoAPI.getVideos(this.state.playlists.kpop)
         .then((videos) => {
             this.setState(function() {
