@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import YouTube from 'react-youtube';
+import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
 
 import VideoAPI from './../api/videos';
@@ -46,7 +47,7 @@ class App extends Component {
                 kpop: 'PLgAWynvKDEDVaILn5viLCElGP0u0svWiS',
                 tswift: 'PLMEZyDHJojxNYSVgRCPt589DI5H7WT1ZK'
             },
-            controlsOpen: false
+            modalIsOpen: false
         };
     }
 
@@ -79,7 +80,7 @@ class App extends Component {
                 return {
                     videos: this.state.customVideos,
                     selectedVideo: this.state.customVideos[Math.floor(Math.random()*this.state.videos.length)],
-                    controlsOpen: !this.state.controlsOpen
+                    modalIsOpen: !this.state.modalIsOpen
                 }
             });
         } else {
@@ -88,7 +89,7 @@ class App extends Component {
                 this.setState(function() {
                     return {
                         videos: videos,
-                        controlsOpen: !this.state.controlsOpen
+                        modalIsOpen: !this.state.modalIsOpen
                     }
                 });
                 this.randomVideo();
@@ -97,10 +98,10 @@ class App extends Component {
 
     }
 
-    toggleControls = () => {
+    toggleModal = () => {
         this.setState(function(prev) {
             return {
-                controlsOpen: !this.state.controlsOpen
+                modalIsOpen: !this.state.modalIsOpen
             }
         });
     }
@@ -126,16 +127,25 @@ class App extends Component {
         };
 
         return (
-            <div className={this.state.controlsOpen ? 'show-controls' : ''}>
-                <div className="controls-wrap">
-                    <button className="close-btn" onClick={this.toggleControls}>Close</button>
+            <div>
+                <Modal
+                    isOpen={this.state.modalIsOpen}
+                    contentLabel="Add Video"
+                    className={{
+                        base: 'react-modal',
+                        afterOpen: 'react-modal--after'
+                    }}
+                    overlayClassName="react-modal-overlay"
+                    onRequestClose={this.toggleModal}
+                >
                     <p><button className="btn btn--block" onClick={this.switchPlaylist.bind(null, 'kpop')}>Kpop</button></p>
                     <p><button className="btn btn--block" onClick={this.switchPlaylist.bind(null, 'tswift')}>Tswift</button></p>
-                    <p className="u-bottom0"><button className="btn btn--block" onClick={this.switchPlaylist.bind(null, 'custom')}>Custom Playlist</button></p>
-                    <p><Link to="/battle">To Battle!</Link></p>
-                </div>
+                    <p><button className="btn btn--block" onClick={this.switchPlaylist.bind(null, 'custom')}>Custom Playlist</button></p>
+                    <div className="text-center"><Link to="/battle">To Battle!</Link></div>
+                </Modal>
+
                 <div className="controls-btn">
-                    <button className="btn" onClick={this.toggleControls}>Playlists</button>
+                    <button className="btn" onClick={this.toggleModal}>Playlists</button>
                 </div>
                 <div className="controls-btn controls-btn--right">
                     <button className="btn" onClick={this.randomVideo}>Random Video</button>
