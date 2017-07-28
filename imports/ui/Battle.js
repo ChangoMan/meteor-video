@@ -1,8 +1,11 @@
+import { Meteor } from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
+
 import React, { Component } from 'react';
 import YouTube from 'react-youtube';
 import Modal from 'react-modal';
 
-import VideoAPI from './../api/videos';
+import {VideosDB} from './../api/videos';
 
 class Battle extends Component {
     constructor(props) {
@@ -10,18 +13,53 @@ class Battle extends Component {
         this.state = {
             videos: [],
             selectedVideo: '',
-            modalIsOpen: true
+            selectedVideoTitle: '',
+            modalIsOpen: true,
+            error: ''
         }
+    }
+    componentDidMount() {
+        this.videosTracker = Tracker.autorun(() => {
+            Meteor.subscribe('videos');
+            const video = VideosDB.find({}).fetch();
+
+            console.log(video)
+            // this.setState({
+            //     selectedVideo: video
+            // });
+
+        });
+    }
+    componentWillUnmount() {
+        this.videosTracker.stop();
     }
     onSubmit = (e) => {
         e.preventDefault();
         let videoId = this.refs.videoId.value.trim();
-        this.setState({
-            selectedVideo: videoId,
-            modalIsOpen: false
-        });
-    }
 
+        Meteor.call('videos.insert', videoId, (err, res) => {
+            if (!err) {
+
+                this.setState({
+                    selectedVideo: videoId,
+                    modalIsOpen: false
+                });
+
+                this.getVideoInfo();
+
+            } else {
+                this.setState({ error: err.reason });
+            }
+        });
+
+    }
+    getVideoInfo = (event) => {
+        if (event) {
+            this.setState({
+                selectedVideoTitle: event.target.getVideoData().title
+            });
+        }
+    }
     toggleModal = () => {
         this.setState(function(prev) {
             return {
@@ -29,15 +67,12 @@ class Battle extends Component {
             }
         });
     }
-
     nextVideo = () => {
         console.log('END, coming soon')
     }
-
     _onError = (event) => {
         console.log(event.target.getVideoData());
     }
-
     render() {
 
         const opts = {
@@ -51,7 +86,6 @@ class Battle extends Component {
 
         return (
             <div>
-
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     contentLabel="Add Video"
@@ -72,11 +106,17 @@ class Battle extends Component {
                     <button className="btn" onClick={this.toggleModal}>Add Video</button>
                 </div>
 
+                <div className="video-list z-float">
+                    <p>Now Playing: {this.state.selectedVideoTitle}</p>
+                    <p></p>
+                </div>
+
                 <div className="video-wrapper">
                     <YouTube
                         videoId={this.state.selectedVideo}
                         opts={opts}
                         className="video-iframe"
+                        onPlay={this.getVideoInfo}
                         onEnd={this.nextVideo}
                         onError={this._onError}
                     />

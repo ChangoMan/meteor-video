@@ -1,7 +1,11 @@
 import { Mongo } from 'meteor/mongo';
 import axios from 'axios';
 
-const VideoAPI = {
+import SimpleSchema from 'simpl-schema';
+
+export const VideosDB = new Mongo.Collection('videos');
+
+export const VideosAPI = {
     getVideos: function (playlist) {
         return axios.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId='+playlist+'&key=AIzaSyDsgYSECSyLU3Ae2nLP_RzRIjRohHCOj0I&maxResults=50')
         .then(function (response) {
@@ -16,8 +20,24 @@ const VideoAPI = {
         .catch(function (error) {
             console.warn('Error in getVideos', error);
         });
-    },
-    VideosDB: new Mongo.Collection('videos')
+    }
 }
 
-export default VideoAPI
+Meteor.methods({
+    'videos.insert'(videoId) {
+
+        new SimpleSchema({
+            videoId: {
+                type: String,
+                min: 5
+            }
+        }).validate({
+            videoId: videoId
+        });
+
+        VideosDB.insert({
+            videoId: videoId
+        });
+
+    }
+});

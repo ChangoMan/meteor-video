@@ -5,6 +5,9 @@ import ReactDOM from 'react-dom';
 
 import { routes } from '../imports/routes/routes';
 
+// Need to import the Mongo collection on both server and client's main.js in order for it to work.
+import { VideosDB } from '../imports/api/videos';
+
 Meteor.startup(() => {
     ReactDOM.render(routes, document.getElementById('app'));
 });

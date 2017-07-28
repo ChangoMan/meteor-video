@@ -3,7 +3,7 @@ import YouTube from 'react-youtube';
 import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
 
-import VideoAPI from './../api/videos';
+import { VideosAPI } from './../api/videos';
 
 class App extends Component {
 
@@ -53,7 +53,7 @@ class App extends Component {
 
     componentDidMount() {
 
-        VideoAPI.getVideos(this.state.playlists.kpop)
+        VideosAPI.getVideos(this.state.playlists.kpop)
         .then((videos) => {
             this.setState(function() {
                 return {
@@ -84,7 +84,7 @@ class App extends Component {
                 }
             });
         } else {
-            VideoAPI.getVideos(this.state.playlists[playlist])
+            VideosAPI.getVideos(this.state.playlists[playlist])
             .then((videos) => {
                 this.setState(function() {
                     return {

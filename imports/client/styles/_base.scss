@@ -109,3 +109,17 @@ p {
     display: block;
     width: 100%;
 }
+
+.z-float {
+    z-index: 10;
+}
+
+.video-list {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    color: #ddd;
+}
