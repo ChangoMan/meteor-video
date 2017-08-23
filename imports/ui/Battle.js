@@ -21,9 +21,13 @@ class Battle extends Component {
     componentDidMount() {
         this.videosTracker = Tracker.autorun(() => {
             Meteor.subscribe('videos');
-            const video = VideosDB.find({}).fetch();
+            const videos = VideosDB.find({}).fetch();
 
-            console.log(video)
+            if (videos.length > 0) {
+                this.setState({
+                    selectedVideo: videos[Math.floor(Math.random()*videos.length)].videoId
+                })
+            }
             // this.setState({
             //     selectedVideo: video
             // });
